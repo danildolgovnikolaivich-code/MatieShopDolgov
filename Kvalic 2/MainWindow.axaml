@@ -1,0 +1,128 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Kvalic_2.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="700"
+        Width="1100" Height="700"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        SystemDecorations="None"
+        x:Class="Kvalic_2.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Icon="avares://Kvalic 2/Resources/Logo.png"
+        Title="Лавка «Матье»">
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+    
+    <Grid RowDefinitions="Auto, *">
+        <!-- Кастомный заголовок -->
+        <Border Grid.Row="0" Background="#F0F0F0" Height="40">
+            <Grid ColumnDefinitions="*, Auto, Auto">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0">
+                    <Image Source="avares://Kvalic 2/Resources/Logo.png" Width="20" Height="20" Margin="0,0,10,0"/>
+                    <TextBlock Text="Матье" FontWeight="Bold"/>
+                </StackPanel>
+                <Button Grid.Column="1" Content="Свернуть" Click="MinimizeClick" Margin="5" Padding="10,5"/>
+                <Button Grid.Column="2" Content="Закрыть" Click="CloseClick" Margin="5" Padding="10,5"/>
+            </Grid>
+        </Border>
+
+        <!-- Основной контент -->
+        <Grid Grid.Row="1" ColumnDefinitions="200, *, 200" Margin="10">
+            <!-- Левая панель -->
+            <StackPanel Grid.Column="0" Spacing="10">
+                <Border Height="150" Background="White" CornerRadius="5" Padding="10" BorderBrush="#E0E0E0" BorderThickness="1">
+                    <Image Source="avares://Kvalic 2/Resources/Logo.png" Stretch="Uniform"/>
+                </Border>
+                <Separator Height="20" Background="Transparent"/>
+                <Button Content="Услуги" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                <Button Content="Выход" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Click="CloseClick" VerticalAlignment="Bottom"/>
+            </StackPanel>
+
+            <!-- Центральная часть -->
+            <Grid Grid.Column="1" RowDefinitions="Auto, *" Margin="10,0">
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="2">
+                    <Button Content="Кастом" Padding="20,10"/>
+                    <Button Content="Косплей" Padding="20,10"/>
+                </StackPanel>
+                
+                <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="0,5">
+                    <ScrollViewer>
+                        <ItemsControl ItemsSource="{Binding Services}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Padding="10">
+                                        <Grid ColumnDefinitions="150, *">
+                                            <Border Grid.Column="0" Height="100" Background="#F5F5F5" Margin="0,0,10,0">
+                                                <TextBlock Text="Фото" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="1" Spacing="5">
+                                                <Grid ColumnDefinitions="*, Auto">
+                                                    <TextBlock Grid.Column="0" Text="{Binding Name}" FontWeight="Bold" FontSize="16"/>
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
+                                                        <Button Content="Редактировать" FontSize="10" Padding="5,2"
+                                                                Command="{Binding $parent[Window].((vm:MainViewModel)DataContext).EditServiceCommand}"
+                                                                CommandParameter="{Binding}"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                                <TextBlock Text="{Binding Description}" TextWrapping="Wrap" MaxHeight="60"/>
+                                                <Grid ColumnDefinitions="*, Auto">
+                                                    <TextBlock Grid.Column="0" Text="{Binding Lastupdated, StringFormat='{}Обновлено: {0:g}'}" 
+                                                               FontSize="12" Foreground="Gray" VerticalAlignment="Bottom"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Price, StringFormat='{}Цена: {0:C}'}" 
+                                                               FontWeight="Bold" HorizontalAlignment="Right"/>
+                                                </Grid>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+
+            <!-- Правая панель -->
+            <StackPanel Grid.Column="2" Spacing="10">
+                <TextBox Text="{Binding SearchText}" Watermark="Поиск"/>
+                <ComboBox ItemsSource="{Binding Collections}" 
+                          SelectedItem="{Binding SelectedCollection}"
+                          HorizontalAlignment="Stretch"
+                          PlaceholderText="Коллекция">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                
+                <Button Content="Сортировка А-Я" 
+                        HorizontalAlignment="Stretch" 
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding ToggleSortCommand}"/>
+                
+                <Button Content="Добавить услугу" 
+                        HorizontalAlignment="Stretch" 
+                        HorizontalContentAlignment="Center"
+                        Background="#4CAF50" Foreground="White"
+                        Command="{Binding AddServiceCommand}"/>
+                
+                <Button Content="Управление коллекциями" 
+                        HorizontalAlignment="Stretch" 
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding ManageCollectionsCommand}"/>
+                
+                <Grid ColumnDefinitions="*, *" Margin="0,20">
+                    <Button Grid.Column="0" Content="◀" HorizontalAlignment="Center" Command="{Binding PreviousPageCommand}"/>
+                    <Button Grid.Column="1" Content="▶" HorizontalAlignment="Center" Command="{Binding NextPageCommand}"/>
+                </Grid>
+                
+                <Border VerticalAlignment="Bottom" Margin="0,350,0,0">
+                    <TextBlock Text="{Binding PaginationInfo}" HorizontalAlignment="Right"/>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

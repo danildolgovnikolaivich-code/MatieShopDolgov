@@ -1,0 +1,39 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Kvalic_2.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="500"
+        x:Class="Kvalic_2.Views.CollectionManagementWindow"
+        x:DataType="vm:CollectionManagementViewModel"
+        Title="Управление коллекциями"
+        Width="400" Height="500"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        SystemDecorations="None">
+    
+    <Border BorderBrush="Gray" BorderThickness="1">
+        <Grid RowDefinitions="Auto, *, Auto, Auto" Margin="20">
+            <TextBlock Grid.Row="0" Text="Управление коллекциями" FontSize="20" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+            <ListBox Grid.Row="1" ItemsSource="{Binding Collections}" SelectedItem="{Binding SelectedCollection}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <StackPanel Grid.Row="2" Margin="0,15" Spacing="10">
+                <TextBlock Text="Добавить коллекцию:"/>
+                <Grid ColumnDefinitions="*, Auto">
+                    <TextBox Grid.Column="0" Text="{Binding NewCollectionName}" Watermark="Название коллекции"/>
+                    <Button Grid.Column="1" Content="+" Command="{Binding AddCommand}" Margin="5,0,0,0" Width="30" HorizontalContentAlignment="Center"/>
+                </Grid>
+                <Button Content="Удалить выбранную" Command="{Binding DeleteCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#f44336" Foreground="White"/>
+            </StackPanel>
+            <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" Margin="0,10,0,0">
+                <Button Content="Сохранить" Command="{Binding SaveCommand}" Width="100" HorizontalContentAlignment="Center" Background="#4CAF50" Foreground="White"/>
+                <Button Content="Закрыть" Command="{Binding CancelCommand}" Width="100" HorizontalContentAlignment="Center" Background="#f44336" Foreground="White"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

@@ -1,0 +1,53 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Kvalic_2.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
+        x:Class="Kvalic_2.Views.EditServiceWindow"
+        x:DataType="vm:EditServiceViewModel"
+        Title="Редактирование услуги"
+        Width="400" Height="600"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        SystemDecorations="None">
+    
+    <Border BorderBrush="Gray" BorderThickness="1">
+        <Grid RowDefinitions="Auto, *, Auto" Margin="20">
+            <TextBlock Grid.Row="0" Text="Редактирование услуги" FontSize="20" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+            <ScrollViewer Grid.Row="1">
+                <StackPanel Spacing="15">
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Название:"/>
+                        <TextBox Text="{Binding Name}" Watermark="Введите название услуги"/>
+                    </StackPanel>
+                    
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Описание:"/>
+                        <TextBox Text="{Binding Description}" Watermark="Введите описание" Height="100" AcceptsReturn="True" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Цена:"/>
+                        <NumericUpDown Value="{Binding Price}" Minimum="0" Increment="100" FormatString="C2"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Коллекции:"/>
+                        <ItemsControl ItemsSource="{Binding Collections}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding IsSelected}" Content="{Binding Collection.Name}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" Margin="0,20,0,0">
+                <Button Content="Сохранить" Command="{Binding SaveCommand}" Width="100" HorizontalContentAlignment="Center" Background="#4CAF50" Foreground="White"/>
+                <Button Content="Отмена" Command="{Binding CancelCommand}" Width="100" HorizontalContentAlignment="Center" Background="#f44336" Foreground="White"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
